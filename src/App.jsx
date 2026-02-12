@@ -2,6 +2,9 @@ import { useMemo, useState } from "react";
 import "./styles.css";
 import spiderLogo from "./assets/spider.png";
 
+const API_BASE =
+  import.meta.env.VITE_API_BASE_URL?.trim() || "http://localhost:5000";
+
 // ✅ VERY SIMPLE FRONTEND-ONLY LOGIN (change these)
 const AUTH = {
   email: "admin@leadfinder.com",
