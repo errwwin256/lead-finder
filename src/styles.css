@@ -1,0 +1,603 @@
+:root {
+  /* Pistachio / Chocolate / Rose Pink */
+  --pistachio: #b7e4c7;
+  --pistachio-2: #d8f3dc;
+  --chocolate: #3b2f2f;
+  --chocolate-2: #5a4545;
+  --rose: #ffd1dc;
+
+  --bg: #fbfbfa;
+  --card: rgba(255, 255, 255, 0.8);
+  --text: #241b1b;
+  --muted: rgba(36, 27, 27, 0.68);
+  --border: rgba(59, 47, 47, 0.14);
+  --shadow: 0 18px 50px rgba(59, 47, 47, 0.1);
+  --radius: 18px;
+}
+
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    Segoe UI,
+    Roboto,
+    Arial;
+  color: var(--text);
+  background:
+    radial-gradient(900px 380px at 10% 0%, var(--pistachio-2), transparent 60%),
+    radial-gradient(900px 380px at 90% 0%, var(--rose), transparent 55%),
+    var(--bg);
+}
+
+.page {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* HEADER */
+.topbar {
+  position: relative; /* ✅ not sticky */
+  top: auto;
+  z-index: 1;
+  background: rgba(251, 251, 250, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(59, 47, 47, 0.08);
+}
+
+.topbarInner.centered {
+  padding: 10px 16px; /* ⬅ smaller padding */
+  display: flex;
+  justify-content: center;
+}
+
+/* Make header layout horizontal instead of vertical */
+.brandCentered {
+  display: flex;
+  align-items: center; /* ⬅ side by side */
+  gap: 10px;
+  text-align: left;
+}
+
+/* Smaller logo */
+.logoImg {
+  width: 36px;
+  height: 36px;
+}
+
+/* Smaller title */
+.brandTextCentered h1 {
+  margin: 0;
+  font-size: 20px; /* ⬅ smaller */
+}
+
+/* Smaller subtitle */
+.brandTextCentered p {
+  margin: 2px 0 0;
+  font-size: 12px;
+}
+
+/* LAYOUT: LEFT FORM / RIGHT RESULTS */
+.shell {
+  width: 100%;
+  max-width: 1200px;
+  margin: 22px auto 40px; /* center */
+  padding: 0 16px;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(59, 47, 47, 0.08);
+  border-radius: 24px;
+  padding: 16px;
+}
+
+/* Optional: make the results container background also solid */
+.right .results {
+  background: #ffffff;
+}
+@media (min-width: 900px) {
+  /* keep both columns visible */
+  .shell {
+    align-items: start;
+  }
+
+  /* left panel stays visible */
+  .left {
+    position: sticky;
+    top: 84px; /* below header */
+    align-self: start;
+  }
+
+  /* results panel scrolls internally */
+  .right .results {
+    max-height: calc(100vh - 110px); /* viewport minus header */
+    overflow: auto;
+  }
+}
+
+@media (min-width: 900px) {
+  .shell {
+    grid-template-columns: 420px minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+.left,
+.right {
+  width: 100%;
+  min-width: 0;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.cardHead {
+  padding: 16px 16px 12px;
+  border-bottom: 1px solid rgba(59, 47, 47, 0.08);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.92),
+    rgba(255, 255, 255, 0.68)
+  );
+}
+
+.cardHead h2 {
+  margin: 0;
+  font-size: 16px;
+}
+.muted {
+  color: var(--muted);
+}
+
+/* FORM */
+.form {
+  padding: 14px 16px 16px;
+  display: grid;
+  gap: 12px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field span {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--muted);
+}
+
+input {
+  height: 46px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(59, 47, 47, 0.18);
+  background: rgba(255, 255, 255, 0.95);
+  outline: none;
+  font-size: 14px;
+}
+
+input:focus {
+  border-color: rgba(183, 228, 199, 0.95);
+  box-shadow: 0 0 0 4px rgba(183, 228, 199, 0.35);
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.btn {
+  height: 46px;
+  padding: 0 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(59, 47, 47, 0.14);
+  background: linear-gradient(135deg, var(--pistachio), var(--rose));
+  color: var(--chocolate);
+  font-weight: 900;
+  cursor: pointer;
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
+.btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.btnGhost {
+  height: 46px;
+  padding: 0 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(59, 47, 47, 0.18);
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--chocolate-2);
+  font-weight: 900;
+  cursor: pointer;
+  width: 140px;
+}
+
+.alert {
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 0, 92, 0.18);
+  background: rgba(255, 209, 220, 0.55);
+  color: var(--chocolate);
+}
+
+.spinner {
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  border: 2px solid rgba(59, 47, 47, 0.25);
+  border-top-color: rgba(59, 47, 47, 0.75);
+  display: inline-block;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* LEFT HINT CARD */
+.hintCard {
+  margin-top: 12px;
+  padding: 14px 14px;
+  border-radius: 16px;
+  border: 1px dashed rgba(59, 47, 47, 0.18);
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.hintTitle {
+  font-weight: 900;
+  margin-bottom: 8px;
+}
+
+.hintList {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+  display: grid;
+  gap: 6px;
+}
+
+code {
+  background: rgba(183, 228, 199, 0.35);
+  border: 1px solid rgba(59, 47, 47, 0.1);
+  padding: 2px 6px;
+  border-radius: 8px;
+  color: var(--chocolate);
+  font-weight: 900;
+}
+
+/* RESULTS HEADER */
+.resultsTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.countPill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(183, 228, 199, 0.55);
+  border: 1px solid rgba(59, 47, 47, 0.1);
+  font-weight: 900;
+  font-size: 12px;
+}
+
+/* EMPTY STATE */
+.empty {
+  padding: 28px 16px 34px;
+  text-align: center;
+}
+.emptyIcon {
+  font-size: 26px;
+  margin-bottom: 6px;
+}
+.emptyTitle {
+  font-weight: 900;
+  margin-bottom: 6px;
+}
+
+/* CARDS (MOBILE/TABLET) */
+.cards {
+  padding: 12px 12px 14px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+@media (min-width: 640px) {
+  .cards {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* TABLE (DESKTOP ONLY) */
+.tableWrap {
+  display: none;
+  padding: 12px 14px 16px;
+}
+
+@media (min-width: 1024px) {
+  .cards {
+    display: none;
+  }
+  .tableWrap {
+    display: block;
+  }
+}
+
+.leadCard {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(59, 47, 47, 0.12);
+  border-radius: 16px;
+  padding: 12px;
+}
+
+.leadTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.leadName {
+  font-weight: 900;
+  font-size: 14px;
+}
+.leadRating {
+  font-weight: 900;
+  font-size: 12px;
+  color: var(--chocolate);
+}
+.star {
+  color: var(--chocolate);
+}
+
+.leadMeta {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+}
+
+.metaItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.metaLabel {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 900;
+}
+.metaLink {
+  font-weight: 900;
+  text-decoration: none;
+  color: var(--chocolate);
+}
+.metaLink:hover {
+  text-decoration: underline;
+}
+
+.leadAddress {
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+/* TABLE STYLES */
+.table {
+  border: 1px solid rgba(59, 47, 47, 0.12);
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.tRow {
+  display: grid;
+  grid-template-columns: 2.1fr 1.2fr 0.9fr 0.9fr 0.7fr;
+  gap: 10px;
+  padding: 12px 12px;
+  border-top: 1px solid rgba(59, 47, 47, 0.08);
+  align-items: center;
+}
+
+.tHead {
+  border-top: none;
+  background: rgba(183, 228, 199, 0.35);
+  font-weight: 900;
+  font-size: 12px;
+}
+
+.cellMain {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.cellTitle {
+  font-weight: 900;
+}
+.cellSub {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.ratingCell {
+  font-weight: 900;
+}
+
+/* Links */
+a {
+  color: var(--chocolate);
+  font-weight: 900;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+.footer {
+  margin-top: auto;
+  padding: 18px 16px 24px;
+  text-align: center;
+}
+html,
+body,
+#root {
+  width: 100%;
+}
+
+#root {
+  display: block;
+}
+
+.brandTextCentered h1 {
+  margin: 0;
+  font-size: 28px;
+  letter-spacing: 0.3px;
+}
+
+.brandTextCentered p {
+  margin: 6px 0 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+.shell {
+  background: transparent !important;
+  border: none !important;
+  backdrop-filter: none !important;
+  padding: 0 16px !important;
+}
+
+/* 2) Make cards consistent "glass" (NOT pure white, NOT conflicting) */
+.card {
+  background: rgba(255, 255, 255, 0.82) !important;
+  border: 1px solid rgba(59, 47, 47, 0.14) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+/* Results wrapper should not force white blocks */
+.right .results {
+  background: transparent !important;
+}
+
+/* 3) Header: one clean size (stop duplicates fighting) */
+.logoImg {
+  width: 36px !important;
+  height: 36px !important;
+  object-fit: contain !important;
+}
+
+.topbarInner.centered {
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+  padding: 10px 16px !important; /* small header */
+  display: flex !important;
+  justify-content: center !important;
+}
+
+.brandCentered {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 10px !important;
+  text-align: left !important;
+}
+
+.brandTextCentered h1 {
+  margin: 0 !important;
+  font-size: 20px !important;
+  letter-spacing: 0.2px !important;
+}
+
+.brandTextCentered p {
+  margin: 2px 0 0 !important;
+  font-size: 12px !important;
+  color: var(--muted) !important;
+}
+/* ===== SIMPLE LOGIN SCREEN ===== */
+.loginPage {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px 16px;
+}
+
+.loginCard {
+  width: 100%;
+  max-width: 420px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: var(--shadow);
+  padding: 20px;
+  display: grid;
+  gap: 12px;
+  text-align: center;
+}
+
+.loginLogo {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  margin: 0 auto 6px;
+}
+
+.loginTitle {
+  margin: 0;
+  font-size: 24px;
+}
+
+.loginSub {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.loginHint {
+  font-size: 12px;
+}
+
+/* logout button in header */
+.logoutBtn {
+  margin-left: 14px;
+}
+
+/* make header row not wrap badly on small */
+.brandCentered {
+  flex-wrap: wrap;
+  justify-content: center;
+}
