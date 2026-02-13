@@ -1,8 +1,8 @@
 {
-<<<<<<< HEAD
+
   "dependencies": {
     "cheerio": "^1.2.0"
-=======
+
   "name": "frontend",
   "private": true,
   "version": "0.0.0",
@@ -27,6 +27,6 @@
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
     "vite": "^7.2.4"
->>>>>>> c5cf293810f52d9f3910b0b42a59a53e05032a1a
+ c5cf293810f52d9f3910b0b42a59a53e05032a1a
   }
 }
