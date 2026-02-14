@@ -1,29 +1,34 @@
+// backend/services/sheetsService.js
 const { google } = require("googleapis");
-const path = require("path");
 
+/**
+ * Builds GoogleAuth using service account JSON stored in ENV.
+ * Required env vars:
+ * - SHEET_ID
+ * - GOOGLE_SERVICE_ACCOUNT_JSON  (the whole JSON string)
+ */
 function getAuth() {
-  const keyFilePath = process.env.GOOGLE_SERVICE_ACCOUNT_PATH;
-  if (!keyFilePath)
-    throw new Error("Missing GOOGLE_SERVICE_ACCOUNT_PATH in .env");
-
-  const { google } = require("googleapis");
-
-  function getServiceAccount() {
-    const raw = process.env.GOOGLE_SERVICE_ACCOUNT_JSON;
-    if (!raw) throw new Error("Missing GOOGLE_SERVICE_ACCOUNT_JSON");
-
-    const creds = JSON.parse(raw);
-    if (creds.private_key)
-      creds.private_key = creds.private_key.replace(/\\n/g, "\n");
-    return creds;
+  const raw = process.env.GOOGLE_SERVICE_ACCOUNT_JSON;
+  if (!raw) {
+    throw new Error("Missing GOOGLE_SERVICE_ACCOUNT_JSON in env");
   }
 
-  function getAuth() {
-    return new google.auth.GoogleAuth({
-      credentials: getServiceAccount(),
-      scopes: ["https://www.googleapis.com/auth/spreadsheets"],
-    });
+  let creds;
+  try {
+    creds = JSON.parse(raw);
+  } catch (e) {
+    throw new Error("GOOGLE_SERVICE_ACCOUNT_JSON is not valid JSON");
   }
+
+  // Render often stores private_key with escaped newlines
+  if (creds.private_key) {
+    creds.private_key = creds.private_key.replace(/\\n/g, "\n");
+  }
+
+  return new google.auth.GoogleAuth({
+    credentials: creds,
+    scopes: ["https://www.googleapis.com/auth/spreadsheets"],
+  });
 }
 
 function getSheetsClient(auth) {
@@ -32,7 +37,7 @@ function getSheetsClient(auth) {
 
 async function appendRowsToResults(rows) {
   const sheetId = process.env.SHEET_ID;
-  if (!sheetId) throw new Error("Missing SHEET_ID in .env");
+  if (!sheetId) throw new Error("Missing SHEET_ID in env");
 
   const auth = getAuth();
   const sheets = getSheetsClient(auth);
@@ -48,7 +53,7 @@ async function appendRowsToResults(rows) {
 
 async function readInputRows() {
   const sheetId = process.env.SHEET_ID;
-  if (!sheetId) throw new Error("Missing SHEET_ID in .env");
+  if (!sheetId) throw new Error("Missing SHEET_ID in env");
 
   const auth = getAuth();
   const sheets = getSheetsClient(auth);
@@ -79,7 +84,7 @@ async function readInputRows() {
 
 async function updateInputRow({ rowNumber, status, note }) {
   const sheetId = process.env.SHEET_ID;
-  if (!sheetId) throw new Error("Missing SHEET_ID in .env");
+  if (!sheetId) throw new Error("Missing SHEET_ID in env");
 
   const auth = getAuth();
   const sheets = getSheetsClient(auth);
@@ -95,17 +100,15 @@ async function updateInputRow({ rowNumber, status, note }) {
 
 /**
  * Read existing place_ids from RESULTS for dedupe.
- * Assumes place_id is the LAST column (example: N column).
- * If your sheet has different layout, tell me and I’ll adjust the range.
+ * Assumes place_id is the LAST column (A2:N => last is N).
  */
 async function readExistingPlaceIds() {
   const sheetId = process.env.SHEET_ID;
-  if (!sheetId) throw new Error("Missing SHEET_ID in .env");
+  if (!sheetId) throw new Error("Missing SHEET_ID in env");
 
   const auth = getAuth();
   const sheets = getSheetsClient(auth);
 
-  // read full rows (A:N) then take last cell as place_id
   const res = await sheets.spreadsheets.values.get({
     spreadsheetId: sheetId,
     range: "RESULTS!A2:N",
@@ -115,18 +118,15 @@ async function readExistingPlaceIds() {
   const set = new Set();
 
   for (const row of values) {
-    const pid = (row[row.length - 1] || "").trim(); // last column
+    const pid = (row[row.length - 1] || "").trim();
     if (pid) set.add(pid);
   }
   return set;
 }
 
-/**
- * Append new INPUT rows (profession/city/country/status).
- */
 async function appendInputRows(rows) {
   const sheetId = process.env.SHEET_ID;
-  if (!sheetId) throw new Error("Missing SHEET_ID in .env");
+  if (!sheetId) throw new Error("Missing SHEET_ID in env");
 
   const auth = getAuth();
   const sheets = getSheetsClient(auth);
