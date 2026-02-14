@@ -1,11 +1,23 @@
 const { scrapeWebsite } = require("./services/scraperService");
 const path = require("path");
 require("dotenv").config({ path: path.join(__dirname, ".env") });
+function getServiceAccountFromEnv() {
+  const raw = process.env.GOOGLE_SERVICE_ACCOUNT_JSON;
+  if (!raw) return null;
 
+  // Render sometimes needs \n fixes for private_key
+  const parsed = JSON.parse(raw);
+  if (parsed.private_key) {
+    parsed.private_key = parsed.private_key.replace(/\\n/g, "\n");
+  }
+  return parsed;
+}
 console.log("ENV CHECK:", {
   SHEET_ID: process.env.SHEET_ID,
   GOOGLE_API_KEY: process.env.GOOGLE_API_KEY ? "SET" : "MISSING",
-  GOOGLE_SERVICE_ACCOUNT_PATH: process.env.GOOGLE_SERVICE_ACCOUNT_PATH,
+  GOOGLE_SERVICE_ACCOUNT_JSON: process.env.GOOGLE_SERVICE_ACCOUNT_JSON
+    ? "SET"
+    : "MISSING",
 });
 
 const express = require("express");
@@ -52,10 +64,10 @@ function ensureEnv(res) {
   if (!process.env.SHEET_ID)
     return res.status(500).json({ error: "Missing SHEET_ID in .env" });
 
-  if (!process.env.GOOGLE_SERVICE_ACCOUNT_PATH)
+  if (!process.env.GOOGLE_SERVICE_ACCOUNT_JSON)
     return res
       .status(500)
-      .json({ error: "Missing GOOGLE_SERVICE_ACCOUNT_PATH in .env" });
+      .json({ error: "Missing GOOGLE_SERVICE_ACCOUNT_JSON in env" });
 
   return null;
 }

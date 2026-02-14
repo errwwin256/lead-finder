@@ -6,10 +6,24 @@ function getAuth() {
   if (!keyFilePath)
     throw new Error("Missing GOOGLE_SERVICE_ACCOUNT_PATH in .env");
 
-  return new google.auth.GoogleAuth({
-    keyFile: path.resolve(process.cwd(), keyFilePath),
-    scopes: ["https://www.googleapis.com/auth/spreadsheets"],
-  });
+  const { google } = require("googleapis");
+
+  function getServiceAccount() {
+    const raw = process.env.GOOGLE_SERVICE_ACCOUNT_JSON;
+    if (!raw) throw new Error("Missing GOOGLE_SERVICE_ACCOUNT_JSON");
+
+    const creds = JSON.parse(raw);
+    if (creds.private_key)
+      creds.private_key = creds.private_key.replace(/\\n/g, "\n");
+    return creds;
+  }
+
+  function getAuth() {
+    return new google.auth.GoogleAuth({
+      credentials: getServiceAccount(),
+      scopes: ["https://www.googleapis.com/auth/spreadsheets"],
+    });
+  }
 }
 
 function getSheetsClient(auth) {
